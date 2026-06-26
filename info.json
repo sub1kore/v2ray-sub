@@ -1,0 +1,11 @@
+{
+  "subscription": "https://sub1kore.github.io/v2ray-sub/sub.txt",
+  "nodes": 186,
+  "updated": "2026-06-26 18:30",
+  "countries": [
+    "Germany",
+    "France",
+    "Singapore",
+    "Japan"
+  ]
+}
