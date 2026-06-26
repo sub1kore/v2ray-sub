@@ -31,7 +31,7 @@ from collections import Counter
 protocols = Counter()
 countries = Counter()
 
-for config in configs:
+for config in lines:
     # پروتکل
     if "://" in config:
         protocol = config.split("://")[0].lower()
@@ -61,7 +61,7 @@ for config in configs:
 stats = {
     "brand": "Sub1Kore VPN",
     "updated": datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
-    "total_configs": len(configs),
+    "total_lines": len(lines),
     "protocols": dict(protocols),
     "countries": dict(countries)
 }
