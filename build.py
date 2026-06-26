@@ -1,14 +1,13 @@
 import base64
-
-with open("configs.txt", "r", encoding="utf-8") as f:
-    configs = [line.strip() for line in f if line.strip()]
-
-with open("sub.txt", "w", encoding="utf-8") as f:
-    f.write("\n".join(configs))
-
-encoded = base64.b64encode("\n".join(configs).encode("utf-8")).decode("utf-8")
-
-with open("sub_base64.txt", "w", encoding="utf-8") as f:
-    f.write(encoded)
-
+from pathlib import Path
+cfg=Path("configs.txt")
+lines=[]
+seen=set()
+if cfg.exists():
+    for l in cfg.read_text(encoding="utf-8").splitlines():
+        l=l.strip()
+        if l and l not in seen:
+            seen.add(l); lines.append(l)
+Path("sub.txt").write_text("\n".join(lines),encoding="utf-8")
+Path("sub_base64.txt").write_text(base64.b64encode("\n".join(lines).encode()).decode(),encoding="utf-8")
 print("Done")
