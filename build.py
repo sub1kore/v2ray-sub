@@ -71,6 +71,69 @@ with open("stats.json", "w", encoding="utf-8") as f:
 
 print("stats.json created")
 
+import requests
+from urllib.parse import urlparse
+
+BRAND = "⚡ Sub1Kore VPN"
+
+flag_map = {
+    "DE": "🇩🇪", "FR": "🇫🇷", "TR": "🇹🇷", "NL": "🇳🇱",
+    "FI": "🇫🇮", "US": "🇺🇸", "GB": "🇬🇧", "SG": "🇸🇬",
+    "JP": "🇯🇵", "KR": "🇰🇷", "CA": "🇨🇦", "AE": "🇦🇪"
+}
+
+geo_cache = {}
+
+def get_country(host):
+    if host in geo_cache:
+        return geo_cache[host]
+
+    try:
+        url = f"http://ip-api.com/json/{host}?fields=status,country,countryCode"
+        r = requests.get(url, timeout=5).json()
+
+        if r.get("status") == "success":
+            country = r.get("country", "Unknown")
+            code = r.get("countryCode", "")
+            flag = flag_map.get(code, "🌍")
+
+            result = f"{flag} {country}"
+        else:
+            result = "🌍 Unknown"
+
+    except Exception:
+        result = "🌍 Unknown"
+
+    geo_cache[host] = result
+    return result
+
+
+new_configs = []
+
+for config in lines:
+
+    if "#" in config:
+        # اگر قبلاً نام دارد، همان را نگه دار
+        new_configs.append(config)
+        continue
+
+    try:
+        host = urlparse(config).hostname
+
+        if not host:
+            host = config.split("@")[1].split(":")[0]
+
+        location = get_country(host)
+
+        config += f"#{BRAND} | {location}"
+
+    except Exception:
+        config += f"#{BRAND}"
+
+    new_configs.append(config)
+
+configs = new_configs
+
 # ذخیره خروجی
 Path("sub.txt").write_text("\n".join(lines), encoding="utf-8")
 
