@@ -28,7 +28,7 @@ import json
 from collections import Counter
 
 stats = {
-    "total": len(configs),
+    "total": len(lines),
     "vless": 0,
     "vmess": 0,
     "trojan": 0,
@@ -38,8 +38,8 @@ stats = {
 
 country_counter = Counter()
 
-for config in configs:
-
+for config in lines:
+    
     if config.startswith("vless://"):
         stats["vless"] += 1
 
