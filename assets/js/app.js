@@ -1,0 +1,1 @@
+fetch("data/info.json").then(r=>r.json()).then(d=>{nodes.textContent=d.nodes;countries.textContent=d.countries.length;updated.textContent=d.updated;copy.onclick=()=>navigator.clipboard.writeText(d.subscription);});
