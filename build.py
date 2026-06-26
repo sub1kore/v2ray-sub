@@ -24,6 +24,64 @@ if cfg.exists():
 
         lines.append(l)
 
+import json
+from collections import Counter
+
+stats = {
+    "total": len(configs),
+    "vless": 0,
+    "vmess": 0,
+    "trojan": 0,
+    "shadowsocks": 0,
+    "countries": {}
+}
+
+country_counter = Counter()
+
+for config in configs:
+
+    if config.startswith("vless://"):
+        stats["vless"] += 1
+
+    elif config.startswith("vmess://"):
+        stats["vmess"] += 1
+
+    elif config.startswith("trojan://"):
+        stats["trojan"] += 1
+
+    elif config.startswith("ss://"):
+        stats["shadowsocks"] += 1
+
+    # استخراج کشور از نام کانفیگ
+    if "#" in config:
+        name = config.split("#",1)[1]
+
+        country_list = [
+            "Germany",
+            "France",
+            "Singapore",
+            "Turkey",
+            "Netherlands",
+            "Finland",
+            "Japan",
+            "United States",
+            "Canada",
+            "United Kingdom",
+            "UAE"
+        ]
+
+        for country in country_list:
+            if country.lower() in name.lower():
+                country_counter[country] += 1
+                break
+
+stats["countries"] = dict(country_counter)
+
+with open("stats.json","w",encoding="utf-8") as f:
+    json.dump(stats,f,indent=4,ensure_ascii=False)
+
+print("Stats generated.")
+
 # ذخیره خروجی
 Path("sub.txt").write_text("\n".join(lines), encoding="utf-8")
 
