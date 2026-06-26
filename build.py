@@ -25,62 +25,51 @@ if cfg.exists():
         lines.append(l)
 
 import json
+from datetime import datetime
 from collections import Counter
 
-stats = {
-    "total": len(lines),
-    "vless": 0,
-    "vmess": 0,
-    "trojan": 0,
-    "shadowsocks": 0,
-    "countries": {}
-}
+protocols = Counter()
+countries = Counter()
 
-country_counter = Counter()
+for config in configs:
+    # پروتکل
+    if "://" in config:
+        protocol = config.split("://")[0].lower()
+        protocols[protocol] += 1
 
-for config in lines:
-    
-    if config.startswith("vless://"):
-        stats["vless"] += 1
-
-    elif config.startswith("vmess://"):
-        stats["vmess"] += 1
-
-    elif config.startswith("trojan://"):
-        stats["trojan"] += 1
-
-    elif config.startswith("ss://"):
-        stats["shadowsocks"] += 1
-
-    # استخراج کشور از نام کانفیگ
+    # کشور (از نام کانفیگ)
     if "#" in config:
-        name = config.split("#",1)[1]
+        name = config.split("#", 1)[1]
 
         country_list = [
             "Germany",
             "France",
+            "Netherlands",
             "Singapore",
             "Turkey",
-            "Netherlands",
-            "Finland",
             "Japan",
             "United States",
-            "Canada",
             "United Kingdom",
-            "UAE"
+            "Finland",
+            "Canada"
         ]
 
         for country in country_list:
             if country.lower() in name.lower():
-                country_counter[country] += 1
-                break
+                countries[country] += 1
 
-stats["countries"] = dict(country_counter)
+stats = {
+    "brand": "Sub1Kore VPN",
+    "updated": datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
+    "total_configs": len(configs),
+    "protocols": dict(protocols),
+    "countries": dict(countries)
+}
 
-with open("stats.json","w",encoding="utf-8") as f:
-    json.dump(stats,f,indent=4,ensure_ascii=False)
+with open("stats.json", "w", encoding="utf-8") as f:
+    json.dump(stats, f, indent=4, ensure_ascii=False)
 
-print("Stats generated.")
+print("stats.json created")
 
 # ذخیره خروجی
 Path("sub.txt").write_text("\n".join(lines), encoding="utf-8")
