@@ -1,9 +1,7 @@
 {
     "brand": "Sub1Kore VPN",
-    "updated": "2026-06-26 22:46 UTC",
-    "total_lines": 20,
-    "protocols": {
-        "vless": 20
-    },
+    "updated": "2026-06-29 23:14 UTC",
+    "total_lines": 0,
+    "protocols": {},
     "countries": {}
 }
